@@ -1,18 +1,20 @@
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { Textarea } from "@/components/ui/textarea";
-import Image from "next/image";
+import configPromise from "@payload/config";
+import { getPayload } from "payload/client";
 
-export default function Home() {
+export default async function Home() {
+  const payload = await getPayload({
+    config: configPromise,
+  });
+
+  const categories = await payload.find({
+    collection: "categories",
+  });
+
   return (
     <div>
-      <Button variant={"elevated"}>Submit</Button>
-      <Input placeholder="Type your email..." />
-      <Progress value={50} />
-      <Textarea placeholder="Type your message here..." />
-      <Checkbox />
+      {categories.map((category) => (
+        <div key={category.id}>{category.name}</div>
+      ))}
     </div>
   );
 }
